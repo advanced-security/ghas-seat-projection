@@ -14,7 +14,7 @@ export async function estimateSeats(
 ) {
   const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days ago date
   let branches = new Set();
-  let uniqueCommiters = new Set();
+  let uniqueCommitters = new Set();
   let usersWithLicenceActive = new Set();
   let usersWithoutLicence = new Set();
 
@@ -64,7 +64,7 @@ export async function estimateSeats(
     );
     commitsResponse.forEach((commit) => {
       if (commit.author !== null && commit.author.login !== null) {
-        uniqueCommiters.add(commit.author.login);
+        uniqueCommitters.add(commit.author.login);
       }
     });
   }
@@ -91,7 +91,7 @@ export async function estimateSeats(
     }
   });
 
-  uniqueCommiters.forEach((commiter) => {
+  uniqueCommitters.forEach((commiter) => {
     if (!usersWithLicenceActive.has(commiter)) {
       usersWithoutLicence.add(commiter);
     }
