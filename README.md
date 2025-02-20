@@ -77,7 +77,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: test action
+      - name: Calculate seats that will be used
         uses: ./ # Uses an action in the root directory
         id: seats
         with:
@@ -92,7 +92,7 @@ jobs:
       - name: Get the handles
         run: echo "HANDLES ${{ steps.seats.outputs.ghas-handles}}"
 
-      - name: Get the amount
+      - name: Get the amount of seats
         run: echo "SEATS THAT WILL BE USED ${{ steps.seats.outputs.ghas-seats}}"
 ...
 ```
