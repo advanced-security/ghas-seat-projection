@@ -5,13 +5,13 @@ inputs:
     description: Organization to be checked
     required: true
   repository:
-    description: Repository to be checked, exclude public repositories
+    description: Repository to be checked (exclude any public repositories before running)
     required: true
   authentication:
     description: Authentication method, either 'app' or 'token'
     required: true
   token:
-    description: PAT
+    description: token that will be used for authentication
     required: false
   application-id:
     description: Application ID of GitHub App, used if `authentication` is set to 'app'
@@ -24,9 +24,9 @@ inputs:
     required: false
 outputs:
   ghas-seats:
-    description: Number of GHAS licences that will be activated
+    description: Number of GHAS seats that will be used
   ghas-handles:
-    description: Array containing all GitHub Handles of the users that will consume a GHAS licence
+    description: Array containing all GitHub Handles of the users that will consume a GHAS seat
 runs:
   using: "node20"
   main: "index.js"
