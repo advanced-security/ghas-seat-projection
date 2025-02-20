@@ -31,7 +31,6 @@ export async function getPaginatedData(url, param, octokit) {
         }
         if (
           error.response &&
-          error.status === 403 &&
           error.response.headers["x-ratelimit-remaining"]
         ) {
           const rateLimitRemaining = Number(
