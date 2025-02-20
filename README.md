@@ -20,7 +20,7 @@ This action will return the amount and handles of GHAS seats that would be used 
 
 ### `token`
 
-**Optional** PAT or GitHub App installation token
+**Optional** PAT or already generated GitHub App installation token
 
 ### `application-id`
 
@@ -46,7 +46,10 @@ Array containing all GitHub Handles of the users that will consume a GHAS licenc
 
 ## Authentication Setup
 
-GitHub app or PAT can be used
+GitHub app or token setup can be used. GitHub App authentication setup supports two setup options:
+
+1. The action will generates the GitHub App installation token in the run.
+2. Use already generated Github App installation token with the token setup specified.
 
 ### GitHub App
 
@@ -61,9 +64,9 @@ GitHub app or PAT can be used
 2. Generate private key
 3. Install the created GitHub App in the organization
 
-### PAT
+### Token
 
-Generate a PAT and specificy option to use PAT in the action
+Generate a PAT and specificy option to use token in the action or use an already generated GitHub App installation token.
 
 ## Example Implementation
 
@@ -88,7 +91,7 @@ jobs:
           application-private-key: ${{ secrets.APP }}
           installation-id: xxxxxx
           # token: ${{ secrets.PAT }}
-      
+    
       - name: Get the handles
         run: echo "HANDLES ${{ steps.seats.outputs.ghas-handles}}"
 

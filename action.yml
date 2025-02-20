@@ -11,7 +11,7 @@ inputs:
     description: Authentication method, either 'app' or 'token'
     required: true
   token:
-    description: token that will be used for authentication
+    description: token that will be used for authentication, supports both PAT and GitHub App installation token
     required: false
   application-id:
     description: Application ID of GitHub App, used if `authentication` is set to 'app'
