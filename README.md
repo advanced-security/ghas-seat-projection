@@ -67,4 +67,32 @@ Generate a PAT and specificy option to use PAT in the action
 
 ## Example Implementation
 
-The [example.yml](example.yml) file contains an example workflow file that shows how to utilize the action
+```yaml
+...
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: A job to test the action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: test action
+        uses: ./ # Uses an action in the root directory
+        id: seats
+        with:
+          organization: xxxxxx
+          repository: xxxxxx
+          authentication: app
+          application-id: xxxxxxx
+          application-private-key: ${{ secrets.APP }}
+          installation-id: xxxxxx
+          # token: ${{ secrets.PAT }}
+      
+      - name: Get the handles
+        run: echo "HANDLES ${{ steps.seats.outputs.ghas-handles}}"
+
+      - name: Get the amount
+        run: echo "SEATS THAT WILL BE USED ${{ steps.seats.outputs.ghas-seats}}"
+...
+```
