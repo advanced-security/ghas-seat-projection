@@ -81,16 +81,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Calculate seats that will be used
-        uses: ./ # Uses an action in the root directory
+        uses: advanced-security/ghas-seat-projection@v1
         id: seats
         with:
           organization: xxxxxx
           repository: xxxxxx
-          authentication: app
-          application-id: xxxxxxx
-          application-private-key: ${{ secrets.APP }}
-          installation-id: xxxxxx
-          # token: ${{ secrets.PAT }}
+          authentication: token
+          token: ${{ secrets.PAT }}
     
       - name: Get the handles
         run: echo "HANDLES ${{ steps.seats.outputs.ghas-handles}}"
