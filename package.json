@@ -1,0 +1,17 @@
+{
+    "name": "ghas-seat-projection",
+    "version": "1.0.0",
+    "description": "Action that projects the number of GHAS seats that will be used",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "steff-petro",
+    "license": "MIT",
+    "dependencies": {
+      "@actions/core": "^1.11.1",
+      "@actions/github": "^6.0.0",
+      "octokit": "^4.0.2"
+    }
+  }
