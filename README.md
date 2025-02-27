@@ -115,4 +115,4 @@ Please create [GitHub Issues][github-issues] if there are bugs or feature reques
 <!-- Resources -->
 
 [license]: ./LICENSE
-[github-issues]: https://github.com/advanced-security/ghas-reviewer-app/issues
+[github-issues]: https://github.com/advanced-security/ghas-seat-projection/issues
