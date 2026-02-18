@@ -1,28 +1,63 @@
+import { Octokit } from "octokit";
 import { getPaginatedData } from "./getPaginatedData.js";
+
+interface Branch {
+  name: string | null;
+}
+
+interface CommitAuthor {
+  login: string | null;
+}
+
+interface Commit {
+  author: CommitAuthor | null;
+}
+
+interface AdvancedSecurityUser {
+  user_login: string | null;
+}
+
+interface RepositoryWithCommitters {
+  advanced_security_committers_breakdown: AdvancedSecurityUser[] | null;
+}
+
+interface OrgMember {
+  login: string;
+}
+
+interface RateLimitResponse {
+  data: {
+    resources: {
+      core: {
+        remaining: number;
+      };
+    };
+  };
+}
 
 /**
  * Estimates the number of seats that will be consumed by users who have not been assigned a license.
- * @param {string} organization - The name of the organization.
- * @param {string} repository - The name of the repository.
- * @param {Object} octokit - The Octokit instance for making requests.
- * @returns {Promise<string[]>} - A promise that resolves to an array of usernames.
+ * @param organization - The name of the organization.
+ * @param repository - The name of the repository.
+ * @param octokit - The Octokit instance for making requests.
+ * @returns A promise that resolves to an array of usernames.
  */
 export async function estimateSeats(
-  organization,
-  repository,
-  octokit
-) {
+  organization: string,
+  repository: string,
+  octokit: Octokit
+): Promise<string[]> {
   const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days ago date
-  let branches = new Set();
-  let uniqueCommitters = new Set();
-  let usersWithLicenceActive = new Set();
-  let usersWithoutLicence = new Set();
+  const branches = new Set<string>();
+  const uniqueCommitters = new Set<string>();
+  const usersWithLicenceActive = new Set<string>();
+  const usersWithoutLicence = new Set<string>();
 
-  const rateLimit = await octokit.request("GET /rate_limit", {
+  const rateLimit = (await octokit.request("GET /rate_limit", {
     headers: {
       "X-GitHub-Api-Version": "2022-11-28",
     },
-  });
+  })) as RateLimitResponse;
 
   if (rateLimit.data.resources.core.remaining < 50) {
     throw new Error(
@@ -30,7 +65,7 @@ export async function estimateSeats(
     );
   }
 
-  const branchesResponse = await getPaginatedData(
+  const branchesResponse = (await getPaginatedData(
     "/repos/{owner}/{repo}/branches",
     {
       owner: organization,
@@ -39,7 +74,7 @@ export async function estimateSeats(
       headers: { "X-GitHub-Api-Version": "2022-11-28" },
     },
     octokit
-  );
+  )) as Branch[];
 
   branchesResponse.forEach((branch) => {
     if (branch !== null && branch.name !== null) {
@@ -48,7 +83,7 @@ export async function estimateSeats(
   });
 
   for (const branch of branches) {
-    const commitsResponse = await getPaginatedData(
+    const commitsResponse = (await getPaginatedData(
       "/repos/{owner}/{repo}/commits",
       {
         owner: organization,
@@ -61,7 +96,7 @@ export async function estimateSeats(
         },
       },
       octokit
-    );
+    )) as Commit[];
     commitsResponse.forEach((commit) => {
       if (commit.author !== null && commit.author.login !== null) {
         uniqueCommitters.add(commit.author.login);
@@ -69,7 +104,7 @@ export async function estimateSeats(
     });
   }
 
-  const usersWithLicenceActiveResponse = await getPaginatedData(
+  const usersWithLicenceActiveResponse = (await getPaginatedData(
     "/orgs/{org}/settings/billing/advanced-security",
     {
       org: organization,
@@ -79,7 +114,7 @@ export async function estimateSeats(
       },
     },
     octokit
-  );
+  )) as RepositoryWithCommitters[];
 
   usersWithLicenceActiveResponse.forEach((repo) => {
     if (repo !== null && repo.advanced_security_committers_breakdown !== null) {
@@ -91,13 +126,13 @@ export async function estimateSeats(
     }
   });
 
-  uniqueCommitters.forEach((commiter) => {
-    if (!usersWithLicenceActive.has(commiter)) {
-      usersWithoutLicence.add(commiter);
+  uniqueCommitters.forEach((committer) => {
+    if (!usersWithLicenceActive.has(committer)) {
+      usersWithoutLicence.add(committer);
     }
   });
 
-  const allOrgMembersResponse = await getPaginatedData(
+  const allOrgMembersResponse = (await getPaginatedData(
     "/orgs/{org}/members",
     {
       org: organization,
@@ -107,7 +142,7 @@ export async function estimateSeats(
       },
     },
     octokit
-  );
+  )) as OrgMember[];
 
   const allOrgMembers = allOrgMembersResponse.map((member) => member.login);
 

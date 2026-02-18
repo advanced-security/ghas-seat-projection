@@ -3,9 +3,9 @@ import core from "@actions/core";
 
 /**
  * Sets up and returns an authenticated Octokit instance based on the provided authentication type.
- * @returns {Promise<Octokit>} A promise that resolves to an authenticated Octokit instance.
+ * @returns A promise that resolves to an authenticated Octokit instance.
  */
-export async function octokitSetup() {
+export async function octokitSetup(): Promise<Octokit> {
   const authenticationType = core.getInput("authentication");
 
   if (authenticationType === "app") {
@@ -17,10 +17,12 @@ export async function octokitSetup() {
       appId: applicationId,
       privateKey: privateKey,
     });
-    return await app.getInstallationOctokit(installationId);
+    return await app.getInstallationOctokit(Number(installationId));
   }
   if (authenticationType === "token") {
     const token = core.getInput("token");
     return new Octokit({ auth: token });
   }
+
+  throw new Error("Invalid authentication type. Must be 'app' or 'token'.");
 }

@@ -18,5 +18,9 @@ try {
   core.setOutput("ghas-seats", handles.length);
 } catch (error) {
   console.error(error);
-  core.setFailed(error.message);
+  if (error instanceof Error) {
+    core.setFailed(error.message);
+  } else {
+    core.setFailed(String(error));
+  }
 }
