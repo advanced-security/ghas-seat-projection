@@ -1,4 +1,4 @@
-# GHAS Seat Projection Javascript Action
+# GHAS Seat Projection Action
 
 This action will return the amount and handles of GHAS seats that would be used if GHAS were to be enabled for a specified repository in an organization.
 
@@ -98,6 +98,30 @@ jobs:
         run: echo "SEATS THAT WILL BE USED ${{ steps.seats.outputs.ghas-seats}}"
 ...
 ```
+
+## Development
+
+This action is written in TypeScript and compiled to JavaScript for distribution.
+
+### Building
+
+After making changes to the TypeScript source files in `src/`, run:
+
+```bash
+npm run build
+```
+
+This will:
+1. Compile TypeScript files from `src/` to `lib/`
+2. Bundle the compiled code with dependencies into `dist/`
+
+The `dist/` directory must be committed as it contains the action's runtime code.
+
+### Project Structure
+
+- `src/` - TypeScript source files
+- `lib/` - Compiled JavaScript (gitignored)
+- `dist/` - Bundled distribution files (committed)
 
 ## License
 
