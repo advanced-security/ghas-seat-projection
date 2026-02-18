@@ -29232,9 +29232,9 @@ async function estimateSeats(organization, repository, octokit) {
             });
         }
     });
-    uniqueCommitters.forEach((commiter) => {
-        if (!usersWithLicenceActive.has(commiter)) {
-            usersWithoutLicence.add(commiter);
+    uniqueCommitters.forEach((committer) => {
+        if (!usersWithLicenceActive.has(committer)) {
+            usersWithoutLicence.add(committer);
         }
     });
     const allOrgMembersResponse = (await getPaginatedData("/orgs/{org}/members", {

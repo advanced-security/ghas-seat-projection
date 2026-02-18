@@ -126,9 +126,9 @@ export async function estimateSeats(
     }
   });
 
-  uniqueCommitters.forEach((commiter) => {
-    if (!usersWithLicenceActive.has(commiter)) {
-      usersWithoutLicence.add(commiter);
+  uniqueCommitters.forEach((committer) => {
+    if (!usersWithLicenceActive.has(committer)) {
+      usersWithoutLicence.add(committer);
     }
   });
 
